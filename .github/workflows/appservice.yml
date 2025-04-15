@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+    - name: List files for debugging
+  run: |
+    echo "PWD: $(pwd)"
+    ls -R
 jobs:
   lint:
     name: Lint Bicep Templates
