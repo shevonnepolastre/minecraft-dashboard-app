@@ -14,13 +14,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          path: minecraft-azure-server
+          path: minecraft-dashboard-app
 
       - name: Run Bicep Linter
         uses: synergy-au/bicep-lint-action@v1
         with:
           analyse-all-files: "true"
-          target-directory: minecraft-azure-server/infrastructure
+          target-directory: minecraft-dashboard-app/infrastructure
 
   deploy:
     name: Deploy Bicep to Azure
