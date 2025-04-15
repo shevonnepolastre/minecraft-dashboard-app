@@ -1,74 +1,57 @@
-/* this file is loaded by index.html and styles the page */
-
-* {
-  box-sizing: border-box;
-}
+/* === Minecraft Theme Additions === */
 
 body {
-  font-family: sans-serif;
-  margin: 2em 1em;
-  line-height: 1.5em;
+  background-color: #80C3FF; /* Sky blue */
+  color: #000;
 }
 
-h1 {
-  color: #7171d1;
-  max-width: calc(100% - 5rem);
-  line-height: 1.1;
+header {
+  background-color: #5A9C3E; /* Grass green */
+  padding: 1rem;
+  text-align: center;
+  color: white;
+  border-radius: 0.5em;
+  margin-bottom: 1em;
 }
 
-table {
-  width: 100%;
-}
-
-th {
-  text-align: left;
-}
-
-td {
-  width: 50%;
-  word-break: break-all;
+h1, h2 {
+  font-family: "Courier New", Courier, monospace;
+  color: #000;
 }
 
 form {
-  background-color: #eee;
-  display: grid;
-  grid-gap: 1em;
-  padding: 1em;
-  max-width: 40ch;
+  background-color: #7A4F20; /* Dirt brown */
+  color: white;
+  border-radius: 10px;
+  padding: 1.5em;
 }
 
-input {
-  border: 1px solid silver;
-  display: block;
-  font-size: 16px;
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 100%;
+form input[type="text"],
+form select {
+  font-family: monospace;
+  background-color: #f8f8f8;
+  border: 2px solid #5A9C3E;
+  padding: 0.5em;
+  border-radius: 5px;
 }
 
+form button,
 form input[type="submit"] {
-  background-color: #bbbbf2;
-  border: 2px solid currentColor;
-  border-radius: 0.25em;
-  cursor: pointer;
-  font-size: inherit;
-  line-height: 1.4em;
-  padding: 0.25em 1em;
-  max-width: 20ch;
-  cursor: pointer;
-  margin-left: auto;
+  background-color: #5A9C3E;
+  color: white;
+  font-weight: bold;
+  padding: 0.5em;
+  border-radius: 5px;
+  border: none;
+  margin-top: 1em;
 }
 
+form button:hover,
 form input[type="submit"]:hover {
-  background-color: #9292d3;
+  background-color: #4a812f;
 }
 
+form button:active,
 form input[type="submit"]:active {
-  background-color: #b2b2d5;
-}
-
-footer {
-  margin-top: 3em;
-  padding-top: 1.5em;
-  border-top: 1px solid lightgrey;
+  background-color: #3c6a26;
 }
