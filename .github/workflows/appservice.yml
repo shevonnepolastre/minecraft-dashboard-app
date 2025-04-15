@@ -41,5 +41,5 @@ jobs:
         run: |
           az deployment group create \
             --resource-group MinecraftRG \
-            --template-file minecraft-dashboard-app/infrastructure/appservice.bicep \
+            --template-file minecraft-dashboard-app/infrastructure/bicep/appservice.bicep \
             --parameters sshPublicKey="${{ secrets.AZURE_SSH_KEY }}"
