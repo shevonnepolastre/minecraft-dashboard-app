@@ -1,45 +1,22 @@
-name: Lint and Deploy App Service Bicep to Azure
+deploy:
+  name: Deploy Bicep to Azure
+  runs-on: ubuntu-latest
+  needs: lint
+  steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        path: minecraft-dashboard-app
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-jobs:
-  lint:
-    name: Lint Bicep Templates
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          path: minecraft-dashboard-app
-
-      - name: Run Bicep Linter
-        uses: synergy-au/bicep-lint-action@v1
-        with:
-          analyse-all-files: "true"
-          target-directory: infrastructure
-
-  deploy:
-    name: Deploy Bicep to Azure
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          path: minecraft-dashboard-app
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy Bicep to Resource Group
-        run: |
-          az deployment group create \
-            --resource-group MinecraftRG \
-            --template-file minecraft-dashboard-app/infrastructure/bicep/appservice.bicep \
-            --parameters sshPublicKey="${{ secrets.AZURE_SSH_KEY }}"
+    - name: Deploy Bicep to Resource Group
+      working-directory: minecraft-dashboard-app/infrastructure/bicep
+      run: |
+        az deployment group create \
+          --resource-group MinecraftRG \
+          --template-file appservice.bicep \
+          --parameters sshPublicKey="${{ secrets.AZURE_SSH_KEY }}"
