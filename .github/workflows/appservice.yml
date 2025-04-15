@@ -18,8 +18,8 @@ jobs:
       - name: Run Bicep Linter
         uses: synergy-au/bicep-lint-action@v1
         with:
-          analyse-all-files: "true"
-          target-directory: infrastructure/bicep
+              analyse-all-files: "true"
+              bicep-version: "latest"
 
   deploy:
     name: Deploy Bicep to Azure
