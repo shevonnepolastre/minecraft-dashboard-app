@@ -36,7 +36,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy Bicep to Resource Group
-        working-directory: infrastructure/bicep
+        working-directory: minecraft-dashboard-app/minecraft-dashboard-app/infrastructure/bicep
         run: |
           az deployment group create \
             --resource-group MinecraftRG \
