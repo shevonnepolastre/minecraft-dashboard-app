@@ -1,4 +1,10 @@
-deploy:
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    
+    deploy:
   name: Deploy Bicep to Azure
   runs-on: ubuntu-latest
   needs: lint
