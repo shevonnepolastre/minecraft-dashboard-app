@@ -10,8 +10,8 @@ const port = process.env.PORT || 3000;
 const notion = new Client({ auth: process.env.NOTION_KEY });
 
 // Middleware
-app.use(express.static("public")); // serves /public (JS, CSS, etc.)
-app.use(express.json()); // parses JSON in POST requests
+app.use(express.static("public")); // Serves static files from /public
+app.use(express.json()); // Parses incoming JSON payloads
 
 // Home route
 app.get("/", (req, res) => {
@@ -68,24 +68,7 @@ app.post("/submit-area", async (req, res) => {
           ]
         : [],
     });
-    
-const { createServer } = require("http");
-const { parse } = require("url");
-const next = require("next");
 
-const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
-const handle = app.getRequestHandler();
-
-app.prepare().then(() => {
-  createServer((req, res) => {
-    const parsedUrl = parse(req.url, true);
-    handle(req, res, parsedUrl);
-  }).listen(process.env.PORT || 3000, (err) => {
-    if (err) throw err;
-    console.log("> Ready on http://localhost:3000");
-  });
-});
     res.json({ message: "Page created successfully", data: newPage });
   } catch (error) {
     console.error("Error creating page:", error);
@@ -93,7 +76,7 @@ app.prepare().then(() => {
   }
 });
 
+// ✅ Azure-compatible port binding
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`✅ Server running on port ${port}`);
 });
-
