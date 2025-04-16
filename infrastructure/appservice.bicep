@@ -5,7 +5,7 @@ param webAppName string = 'minecraftwebapp'
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
-@description('Describes plan\'s pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/')
+@description('Describes plan\'s pricing tier and instance size.')
 @allowed([
   'F1'
   'D1'
@@ -32,10 +32,10 @@ param sku string = 'B1'
 ])
 param language string = 'node'
 
-@description('Optional Git Repo URL. If empty, a "hello world" app will be deployed from the Azure-Samples repo.')
+@description('Optional Git Repo URL. If empty, a sample will be used.')
 param repoUrl string = 'https://github.com/shevonnepolastre/minecraft-dashboard-app'
 
-@description('Git branch to deploy from')
+@description('Git branch to deploy from.')
 param branch string = 'main'
 
 var appServicePlanName = 'AppServicePlan-${webAppName}'
@@ -51,10 +51,10 @@ var gitRepoUrl = empty(repoUrl) ? gitRepoReference[language] : repoUrl
 
 var configReference = {
   '.net': {
-    comments: '.NET app. No additional configuration needed.'
+    comments: '.NET app'
   }
   html: {
-    comments: 'HTML app. No additional configuration needed.'
+    comments: 'HTML app'
   }
   php: {
     phpVersion: '7.4'
@@ -63,34 +63,42 @@ var configReference = {
     appSettings: [
       {
         name: 'WEBSITE_NODE_DEFAULT_VERSION'
-        value: '16.20.0' // or whichever LTS version you prefer
+        value: '~18'
       }
     ]
   }
+  java: {
+    javaVersion: '11'
+  }
 }
 
-resource asp 'Microsoft.Web/serverfarms@2022-03-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: appServicePlanName
   location: location
   sku: {
     name: sku
+  }
+  kind: 'linux'
+  properties: {
+    reserved: true
   }
 }
 
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
   location: location
-  kind: 'app'
+  kind: 'app,linux'
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     siteConfig: union(configReference[language], {
+      linuxFxVersion: 'NODE|18-lts'
       minTlsVersion: '1.2'
       scmMinTlsVersion: '1.2'
       ftpsState: 'FtpsOnly'
     })
-    serverFarmId: asp.id
+    serverFarmId: appServicePlan.id
     httpsOnly: true
   }
 }
