@@ -5,3 +5,4 @@ Minecraft Admin Dashboard using Azure App Service, Containerized Backend, and No
 ## This project is a work in progress as I build a Minecraft-themed dashboard to learn Azure App Services, Containers, and Virtual Networking for the AZ-104 exam.
 
 
+# redeploy
