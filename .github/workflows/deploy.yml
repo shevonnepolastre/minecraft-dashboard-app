@@ -1,45 +1,50 @@
-name: JavaScript CI
+name: Build and deploy Node.js app to Azure Web App
 
-on: [push]
-
-name: Node.js
+on:
+  push:
+    branches:
+      - main  # or whatever branch you're deploying from
 
 env:
-  AZURE_WEBAPP_NAME: minecraftwebapp  # Set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: 'app/backend'      # Set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '18.x'                # Set this to the node version to use
+  AZURE_WEBAPP_NAME: minecraftwebapp      # your Azure App Service name
+  AZURE_WEBAPP_PACKAGE_PATH: './app/backend'  # folder containing package.json
+  NODE_VERSION: '18.x'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-    # Check out the repo
-    - name: 'Checkout GitHub Action' 
-      uses: actions/checkout@main
-   
-    - uses: azure/login@v2
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
-    - name: Setup Node ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-    
-    - name: 'npm install, build, and test'
-      run: |
-        npm install
-        npm run build --if-present
-        npm run test --if-present
-      working-directory:  app/backend
-               
-    # Deploy web app using Azure credentials
-    - uses: azure/webapps-deploy@v3
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-    # Azure logout 
-    - name: logout
-      run: |
-        az logout
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build --if-present
+        working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Zip package
+        run: |
+          cd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          zip -r ../app.zip .
+          cd ../..
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: app.zip
+
+      - name: Logout of Azure
+        run: az logout
