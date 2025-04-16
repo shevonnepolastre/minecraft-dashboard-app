@@ -34,17 +34,12 @@ jobs:
           npm run build --if-present
         working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-      - name: Zip package
-        run: |
-          cd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          zip -r ../app.zip .
-          cd ../..
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: app.zip
+          with:
+            app-name: minecraftwebapp
+            package: .
+            publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
 
       - name: Logout of Azure
         run: az logout
