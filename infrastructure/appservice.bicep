@@ -20,7 +20,7 @@ param location string = resourceGroup().location
   'P3'
   'P4'
 ])
-param sku string = 'F1'
+param sku string = 'B1'
 
 @description('The language stack of the app.')
 @allowed([
