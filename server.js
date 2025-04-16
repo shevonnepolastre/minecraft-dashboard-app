@@ -80,3 +80,7 @@ app.post("/submit-area", async (req, res) => {
 app.listen(port, () => {
   console.log(`✅ Server running on port ${port}`);
 });
+
+app.get("/test", (req, res) => {
+  res.send("✅ Your Node app is running!");
+});
