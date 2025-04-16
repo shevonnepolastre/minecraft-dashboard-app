@@ -7,7 +7,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: minecraftwebapp      # your Azure App Service name
-  AZURE_WEBAPP_PACKAGE_PATH: './app/backend'  # folder containing package.json
+  AZURE_WEBAPP_PACKAGE_PATH: './app'  # folder containing package.json
   NODE_VERSION: '18.x'
 
 jobs:
