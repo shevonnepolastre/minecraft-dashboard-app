@@ -106,3 +106,7 @@ app.post("/debug-db", async (req, res) => {
     res.status(500).json({ error: error.body || error.message });
   }
 });
+
+app.get("/debug-notion-db/:area", async (req, res) => {
+  ...
+});
