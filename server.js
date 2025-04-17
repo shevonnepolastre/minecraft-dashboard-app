@@ -56,8 +56,7 @@ app.get("/debug-notion-db/:area", async (req, res) => {
 
 // POST: Create a new page in the selected Notion database
 app.post("/submit-area", async (req, res) => {
-  const { minecraftdb, pageName, header } = req.body;
-  const area = minecraftdb;
+  const { area, pageName, header } = req.body;
 
   const dbMap = {
     world: process.env.NOTION_DB_WORLD,
