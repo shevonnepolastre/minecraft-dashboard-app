@@ -86,3 +86,23 @@ app.post("/submit-area", async (req, res) => {
 app.listen(port, () => {
   console.log(`✅ Server running on port ${port}`);
 });
+
+app.post("/debug-db", async (req, res) => {
+  const { area } = req.body;
+  const dbMap = {
+    world: process.env.NOTION_DB_WORLD,
+    mods: process.env.NOTION_DB_MODS,
+    spawnpoint: process.env.NOTION_DB_SPAWNPOINT,
+    server: process.env.NOTION_DB_SERVER,
+    ideas: process.env.NOTION_DB_IDEAS,
+  };
+  const dbID = dbMap[area];
+
+  try {
+    const db = await notion.databases.retrieve({ database_id: dbID });
+    res.json(db);
+  } catch (error) {
+    console.error("❌ Debug DB Error:", JSON.stringify(error, null, 2));
+    res.status(500).json({ error: error.body || error.message });
+  }
+});
