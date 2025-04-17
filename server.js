@@ -13,19 +13,51 @@ const notion = new Client({ auth: process.env.NOTION_KEY });
 app.use(express.static("public")); // Serve static files from /public
 app.use(express.json()); // Parse incoming JSON payloads
 
-// Serve the homepage
+// Serve homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// Test route
+// Test route to confirm the server is running
 app.get("/test", (req, res) => {
   res.send("✅ Your Node app is running!");
 });
 
-// POST: Create a new page in Notion
+// Debug route to confirm Notion DB access
+app.get("/debug-notion-db/:area", async (req, res) => {
+  const area = req.params.area;
+
+  const dbMap = {
+    world: process.env.NOTION_DB_WORLD,
+    mods: process.env.NOTION_DB_MODS,
+    spawnpoint: process.env.NOTION_DB_SPAWNPOINT,
+    server: process.env.NOTION_DB_SERVER,
+    ideas: process.env.NOTION_DB_IDEAS,
+  };
+
+  const dbID = dbMap[area];
+
+  if (!dbID) {
+    return res.status(400).json({ message: `No DB ID found for area: ${area}` });
+  }
+
+  try {
+    const dbInfo = await notion.databases.retrieve({ database_id: dbID });
+    res.json({
+      message: `Successfully retrieved DB info for ${area}`,
+      dbID,
+      properties: dbInfo.properties,
+    });
+  } catch (error) {
+    console.error("❌ Error retrieving DB info:", JSON.stringify(error, null, 2));
+    res.status(500).json({ error: error.body || error.message });
+  }
+});
+
+// POST: Create a new page in the selected Notion database
 app.post("/submit-area", async (req, res) => {
-  const { area, pageName, header } = req.body;
+  const { minecraftdb, pageName, header } = req.body;
+  const area = minecraftdb;
 
   const dbMap = {
     world: process.env.NOTION_DB_WORLD,
@@ -74,7 +106,7 @@ app.post("/submit-area", async (req, res) => {
 
     res.json({ message: "Page created successfully", data: newPage });
   } catch (error) {
-    console.error("Error creating page:", error);
+    console.error("❌ Error creating page:", JSON.stringify(error, null, 2));
     res.status(500).json({
       message: "Error creating page",
       error: error.body || error.message,
@@ -82,31 +114,7 @@ app.post("/submit-area", async (req, res) => {
   }
 });
 
-// Start server
+// Start the server
 app.listen(port, () => {
   console.log(`✅ Server running on port ${port}`);
-});
-
-app.post("/debug-db", async (req, res) => {
-  const { area } = req.body;
-  const dbMap = {
-    world: process.env.NOTION_DB_WORLD,
-    mods: process.env.NOTION_DB_MODS,
-    spawnpoint: process.env.NOTION_DB_SPAWNPOINT,
-    server: process.env.NOTION_DB_SERVER,
-    ideas: process.env.NOTION_DB_IDEAS,
-  };
-  const dbID = dbMap[area];
-
-  try {
-    const db = await notion.databases.retrieve({ database_id: dbID });
-    res.json(db);
-  } catch (error) {
-    console.error("❌ Debug DB Error:", JSON.stringify(error, null, 2));
-    res.status(500).json({ error: error.body || error.message });
-  }
-});
-
-app.get("/debug-notion-db/:area", async (req, res) => {
-  ...
 });
