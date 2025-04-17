@@ -3,25 +3,27 @@ const express = require("express");
 const { Client } = require("@notionhq/client");
 const path = require("path");
 
-const notion = new Client({ auth: process.env.NOTION_KEY });
-const databaseId = process.env.NOTION_DATABASE_ID;
-
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Notion client
+// Initialize Notion client
 const notion = new Client({ auth: process.env.NOTION_KEY });
 
 // Middleware
-app.use(express.static("public")); // Serves static files from /public
-app.use(express.json()); // Parses incoming JSON payloads
+app.use(express.static("public")); // Serve static files from /public
+app.use(express.json()); // Parse incoming JSON payloads
 
-// Home route
+// Serve the homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// POST: Create a new page in the Notion database
+// Test route
+app.get("/test", (req, res) => {
+  res.send("✅ Your Node app is running!");
+});
+
+// POST: Create a new page in Notion
 app.post("/submit-area", async (req, res) => {
   const { area, pageName, header } = req.body;
 
@@ -40,9 +42,7 @@ app.post("/submit-area", async (req, res) => {
 
   try {
     const newPage = await notion.pages.create({
-      parent: {
-        database_id: dbID,
-      },
+      parent: { database_id: dbID },
       properties: {
         Name: {
           title: [
@@ -75,15 +75,14 @@ app.post("/submit-area", async (req, res) => {
     res.json({ message: "Page created successfully", data: newPage });
   } catch (error) {
     console.error("Error creating page:", error);
-    res.status(500).json({ message: "Error creating page", error: error.body || error.message });
+    res.status(500).json({
+      message: "Error creating page",
+      error: error.body || error.message,
+    });
   }
 });
 
-// ✅ Azure-compatible port binding
+// Start server
 app.listen(port, () => {
   console.log(`✅ Server running on port ${port}`);
-});
-
-app.get("/test", (req, res) => {
-  res.send("✅ Your Node app is running!");
 });
