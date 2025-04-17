@@ -8,6 +8,7 @@ const port = process.env.PORT || 3000;
 
 // Initialize Notion client
 const notion = new Client({ auth: process.env.NOTION_KEY });
+const databaseId = process.env.NOTION_DATABASE_ID;
 
 // Middleware
 app.use(express.static("public")); // Serve static files from /public
