@@ -1,4 +1,4 @@
-# minecraft-dashboard-app
+# Web Form to Notion to Azure App Service 
 Minecraft Admin Dashboard using Azure App Service, Containerized Backend, and Notion Integration. Built to explore core AZ-104 concepts like App Services, VNet integration, and deployment automation
 
 ## Features
