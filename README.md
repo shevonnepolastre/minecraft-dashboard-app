@@ -60,3 +60,39 @@ Make sure the [YAML file](https://github.com/shevonnepolastre/minecraft-dashboar
 
 ### 5. Add self-hosted runner 
 You can follow the Github [guide on self-hosted runners ](****https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners)
+
+### 6. Test it out
+
+Enter "node server.js" and then type in your browser "localhost:[number shown after typing node server.js]" and test that the form works and is connecting to Notion.  
+
+### 7. Use bicep and yaml to create web app and App Service plan 
+
+I created the bicep in the Infrastructure folder and the yaml is in .github/workflows 
+
+### 8.  Deploy web app
+
+You can connect to your repository, use VS Code, or do it manually 
+
+### 9. Add variables in .env file into Environment Variables in Azure
+
+Make sure to add the variables in the Environment Variables section in Azure and add this to your sever.js:
+
+```
+
+const notion = new Client({ auth: process.env.NOTION_KEY });
+const databaseId = process.env.NOTION_DATABASE_ID;
+
+```
+
+### 10. Use Debug Console and Log Stream to Workout Issues
+
+If you have issues, use Debug Console and Log Stream to look at the errors you are receiving 
+
+
+## Lessson Learned 
+
+1. Linux is much easier to setup than Windows.  Not saying you shouldn't learn Windows but just an observation of which one is easier to work with
+2. Add your .env to .gitignore BUT make sure you add those variables in Azure
+3. You cannot use 64-bit on the free App Service plan
+4. If you want to check out Deployment Slots, you need to go Standard or higher.  Basic doesn't have it
+5. Do not be afraid to use other people's stuff and make it your own 
