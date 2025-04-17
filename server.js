@@ -3,6 +3,9 @@ const express = require("express");
 const { Client } = require("@notionhq/client");
 const path = require("path");
 
+const notion = new Client({ auth: process.env.NOTION_KEY });
+const databaseId = process.env.NOTION_DATABASE_ID;
+
 const app = express();
 const port = process.env.PORT || 3000;
 
